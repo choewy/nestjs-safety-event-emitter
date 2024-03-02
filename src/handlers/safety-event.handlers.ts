@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { OnSafetyEvent } from 'src/safety-event-emiiter/safety-event.decorators';
+import { OnSafetyEvent } from 'src/safety-event-emitter/safety-event.decorators';
 import { ExampleService } from 'src/example/example.service';
 
 import { SafetyEventSubject } from './enums';

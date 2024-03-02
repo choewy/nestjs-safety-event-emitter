@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { NestjsEventSubject, SafetyEventSubject } from './handlers/enums';
-import { SafetyEventEmitter } from './safety-event-emiiter/safety-event.emitter';
+import { SafetyEventEmitter } from './safety-event-emitter/safety-event.emitter';
 
 @Injectable()
 export class AppService {
