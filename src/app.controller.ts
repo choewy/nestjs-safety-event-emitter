@@ -36,4 +36,14 @@ export class AppController {
   async sendSafetyExceptionEvent() {
     return this.appService.sendSafetyEvent(SafetyEventSubject.Exception);
   }
+
+  @Get('safety/error/ignore')
+  async sendSafetyErrorIgnoreEvent() {
+    return this.appService.sendSafetyEventWithErrorIgnore(SafetyEventSubject.Error);
+  }
+
+  @Get('safety/exception/ignore')
+  async sendSafetyExceptionIgnoreEvent() {
+    return this.appService.sendSafetyEventWithErrorIgnore(SafetyEventSubject.Exception);
+  }
 }

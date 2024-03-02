@@ -34,12 +34,15 @@ export const OnSafetyEvent = (event: string) =>
 @Injectable()
 export class SafetyEventEmitter {
   constructor(private readonly eventEmitter: EventEmitter2) {}
-  async emitAsync(event: string | symbol | event[], ...values: any[]): Promise<any> {
-    const errorOrValues = await this.eventEmitter.emitAsync(event, ...values);
+  async emitAsync(event: string | symbol | event[], options?: { values: any[]; ignoreError?: boolean }): Promise<any> {
+    const errorOrValues = await this.eventEmitter.emitAsync(event, ...(options?.values ?? []));
 
-    /** @here catch error or exception */
     for (const errorOrValue of errorOrValues) {
       if (errorOrValue instanceof Error) {
+        if (options?.ignoreError === true) {
+          continue;
+        }
+
         throw errorOrValue;
       }
     }
@@ -100,6 +103,24 @@ describe('safery event emitter', () => {
       .get('/safety/exception')
       .expect(400)
       .expect(new BadRequestException(SafetyEventSubject.Exception).getResponse());
+  });
+});
+```
+
+```ts
+describe('safery event emitter with ignore error', () => {
+  it('(GET) /safety/error/ignore - should be 200', () => {
+    return request(app.getHttpServer())
+      .get('/safety/error/ignore')
+      .expect(200)
+      .expect([JSON.parse(JSON.stringify(new Error(SafetyEventSubject.Error)))]);
+  });
+
+  it('(GET) /safety/exception/ignore - should be 200', () => {
+    return request(app.getHttpServer())
+      .get('/safety/exception/ignore')
+      .expect(200)
+      .expect([JSON.parse(JSON.stringify(new BadRequestException(SafetyEventSubject.Exception)))]);
   });
 });
 ```

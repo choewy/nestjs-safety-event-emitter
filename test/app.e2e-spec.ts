@@ -54,4 +54,20 @@ describe('AppController (e2e)', () => {
         .expect(new BadRequestException(SafetyEventSubject.Exception).getResponse());
     });
   });
+
+  describe('safery event emitter with ignore error', () => {
+    it('(GET) /safety/error/ignore - should be 200', () => {
+      return request(app.getHttpServer())
+        .get('/safety/error/ignore')
+        .expect(200)
+        .expect([JSON.parse(JSON.stringify(new Error(SafetyEventSubject.Error)))]);
+    });
+
+    it('(GET) /safety/exception/ignore - should be 200', () => {
+      return request(app.getHttpServer())
+        .get('/safety/exception/ignore')
+        .expect(200)
+        .expect([JSON.parse(JSON.stringify(new BadRequestException(SafetyEventSubject.Exception)))]);
+    });
+  });
 });

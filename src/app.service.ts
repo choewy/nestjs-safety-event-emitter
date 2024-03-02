@@ -15,4 +15,8 @@ export class AppService {
   async sendSafetyEvent(event: SafetyEventSubject) {
     return this.safetyEventEmitter.emitAsync(event);
   }
+
+  async sendSafetyEventWithErrorIgnore(event: SafetyEventSubject) {
+    return this.safetyEventEmitter.emitAsync(event, { ignoreError: true });
+  }
 }
