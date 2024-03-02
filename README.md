@@ -4,7 +4,7 @@
 
 ![nestjs-lifecycle](./img/nestjs-request-lifecycle.png)
 
-## `safety-event-emitter/safety-event-decorators.ts`
+- `src/safety-event-emitter/safety-event-decorators.ts`
 
 ```ts
 export const OnSafetyEvent = (event: string) =>
@@ -15,7 +15,7 @@ export const OnSafetyEvent = (event: string) =>
       return [key, Reflect.getMetadata(key, descriptor.value)];
     });
 
-    /** @here */
+    /** @here blocking handler with await */
     descriptor.value = async function (...args: any[]) {
       try {
         return await handler.bind(this)(...args);
@@ -28,7 +28,28 @@ export const OnSafetyEvent = (event: string) =>
   });
 ```
 
-## `test/app.e2e-spec.ts`
+- `src/safety-event-emitter/safety-event.emitter.ts`
+
+```ts
+@Injectable()
+export class SafetyEventEmitter {
+  constructor(private readonly eventEmitter: EventEmitter2) {}
+  async emitAsync(event: string | symbol | event[], ...values: any[]): Promise<any> {
+    const errorOrValues = await this.eventEmitter.emitAsync(event, ...values);
+
+    /** @here catch error or exception */
+    for (const errorOrValue of errorOrValues) {
+      if (errorOrValue instanceof Error) {
+        throw errorOrValue;
+      }
+    }
+
+    return errorOrValues;
+  }
+}
+```
+
+- `test/app.e2e-spec.ts`
 
 ```ts
 let app: INestApplication;
